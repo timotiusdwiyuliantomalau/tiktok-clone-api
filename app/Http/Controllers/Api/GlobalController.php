@@ -16,7 +16,6 @@ class GlobalController extends Controller
         try {
             $suggested = User::inRandomOrder()->limit(5)->get();
             $following = User::inRandomOrder()->limit(10)->get();
-
             return response()->json([
                 'suggested' => new UsersCollection($suggested),
                 'following' => new UsersCollection($following)

@@ -10,8 +10,7 @@ use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
-    /**
-     * Display a listing of the resource.
+    /** Display a listing of the resource.
      */
     public function loggedInUser()
     {
@@ -32,11 +31,9 @@ class UserController extends Controller
         if ($request->height === '' || $request->width === '' || $request->top === '' || $request->left === '') {
             return response()->json(['error' => 'The dimensions are incomplete'], 400);
         }
-
         try {
             $user = (new FileService)->updateImage(auth()->user(), $request);
             $user->save();
-
             return response()->json(['success' => 'OK'], 200);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 400);

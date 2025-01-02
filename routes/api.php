@@ -7,8 +7,8 @@ use App\Http\Controllers\Api\LikeController;
 use App\Http\Controllers\Api\PostController;
 use App\Http\Controllers\Api\ProfileController;
 use App\Http\Controllers\Api\UserController;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -19,26 +19,18 @@ use Illuminate\Support\Facades\Route;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-
-Route::get('/get-random-users', [GlobalController::class, 'getRandomUsers']);
-Route::get('/home', [HomeController::class, 'index']);
-
-Route::middleware(['auth:sanctum'])->group(function () {
-
-    Route::get('/logged-in-user', [UserController::class, 'loggedInUser']);
-    Route::post('/update-user-image', [UserController::class, 'updateUserImage']);
-    Route::patch('/update-user', [UserController::class, 'updateUser']);
-
-    Route::get('/posts/{id}', [PostController::class, 'show']);
-    Route::post('/posts', [PostController::class, 'store']);
-    Route::delete('/posts/{id}', [PostController::class, 'destroy']);
-
-    Route::get('/profiles/{id}', [ProfileController::class, 'show']);
-
-    Route::post('/comments', [CommentController::class, 'store']);
-    Route::delete('/comments/{id}', [CommentController::class, 'destroy']);
-
-    Route::post('/likes', [LikeController::class, 'store']);
-    Route::delete('/likes/{id}', [LikeController::class, 'destroy']);
-
+Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
+    return $request->user();
 });
+Route::controller(UserController::class)->group(function () {
+    Route::get('/logged-in-user', 'loggedInUser');
+    Route::patch('/update-user', 'updateUser');
+    Route::get('/get-user/{id}', 'getUser');
+    Route::post('/update-user-image', 'updateUserImage');
+});
+Route::get("/get-random-users",[GlobalController::class,"getRandomUsers"]);
+Route::resource('posts', PostController::class);
+Route::resource('home', HomeController::class);
+Route::resource('profiles', ProfileController::class);
+Route::resource('likes',LikeController::class);
+Route::resource('comments',CommentController::class);

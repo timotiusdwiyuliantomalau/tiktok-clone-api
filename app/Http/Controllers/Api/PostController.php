@@ -23,11 +23,9 @@ class PostController extends Controller
         try {
             $post = new Post;
             $post = (new FileService)->addVideo($post, $request);
-
             $post->user_id = auth()->user()->id;
             $post->text = $request->input('text');
             $post->save();
-
             return response()->json(['success' => 'OK'], 200);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 400);
